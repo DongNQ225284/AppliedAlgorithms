@@ -123,34 +123,45 @@ public:
 };
 
 int main() {
-    ifstream file("LAB0102Maze.txt");
     int n, m, r, c;
-    file >> n >> m >> r >> c;
     vector<vector<bool>> a;
-    for (int i = 0; i != n; i++) {
-        vector<bool> row;
-        for (int j = 0; j != m; j++) {
-            bool e;  file >> e;
-            row.push_back(e);
+    bool inputFromFile = true; //set
+    if (inputFromFile) {
+        ifstream file("LAB0102Maze.txt");
+        file >> n >> m >> r >> c;
+        for (int i = 0; i != n; i++) {
+            vector<bool> row;
+            for (int j = 0; j != m; j++) {
+                bool e;  file >> e;
+                row.push_back(e);
+            }
+            a.push_back(row);
         }
-        a.push_back(row);
+    } else {
+        cin >> n >> m >> r >> c;
+        for (int i = 0; i != n; i++) {
+            vector<bool> row;
+            for (int j = 0; j != m; j++) {
+                bool e;  cin >> e;
+                row.push_back(e);
+            }
+            a.push_back(row);
+        }
     }
-    // int n, m, r, c;
-    // cin >> n >> m >> r >> c;
-    // vector<vector<bool>> a;
-    // for (int i = 0; i != n; i++) {
-    //     vector<bool> row;
-    //     for (int j = 0; j != m; j++) {
-    //         bool e;  cin >> e;
-    //         row.push_back(e);
-    //     }
-    //     a.push_back(row);
-    // }
-    bool debug = false;
-    bool showPath = false;
+    bool debug = false; //debug?
+    bool showPath = false; //showPath?
+    bool clock = false; //want to measure time?
+    
+    auto start = chrono::high_resolution_clock::now();
+    
     Solution solution;
     solution.init(a);
     solution.solve(r - 1, c - 1, debug, showPath);
     solution.show();
+
+    auto end = chrono::high_resolution_clock::now();
+    
+    chrono::duration<double> elapsed = end - start;
+    if (clock) cout << "Runtimes: " << 1000 * elapsed.count() << "ms\n";
     return 0;
 }
