@@ -1,4 +1,5 @@
 /*
+Problem: LAB.01.02 - Maze
 Description
 Một mê cung hình chữ nhật được biểu diễn bởi 0-1 ma trận NxM.
 Trong đó A[i,j] = 1 thể hiện ô (i,j) là tường gạch và A[i,j] = 0 thể hiện ô (i,j) là ô trống, có thể di chuyển vào. 
@@ -18,107 +19,87 @@ using namespace std;
 
 class Solution {
 private:
+    queue<tuple<int, int, vector<char>>> Q; // <i, j, path>
     vector<vector<bool>> matrix;
     vector<char> best_path;
-    vector<char> path;
     bool showPath;
     bool debug;
-    int step;
     int best;
     int M, N;
 public:
     void init(vector<vector<bool>> matrix) {
-        this->step = 0;
-        this->best = INT_MAX;
         this->matrix = matrix;
         this->N = matrix.size();
         this->M = matrix[0].size();
     }
-
-    void Try(int i, int j) { 
-        if (debug) print(i, j);
-        if (step > best) return;
-        if (i == 0 || i == N - 1|| j == 0 || j == M - 1) {
-            if (best > step) {
-                best_path = path;
-                best = step;
-            }
-            if (debug) {
-                cout << "update best" << endl;
-                show();
-            }
-            return;
-        }
-        if (!matrix[i + 1][j]) {
-            step++;
-            path.push_back('D');
-            matrix[i][j] = true;
-            Try(i + 1, j);
-            matrix[i][j] = false;
-            path.pop_back();
-            step--;
-        }
-        if (!matrix[i - 1][j]) {
-            step++;
-            matrix[i][j] = true;
-            path.push_back('U');
-            Try(i - 1, j);
-            matrix[i][j] = false;
-            path.pop_back();
-            step--;
-        } 
-        if (!matrix[i][j - 1]) {
-            step++;
-            matrix[i][j] = true;
-            path.push_back('L');
-            Try(i, j - 1);
-            matrix[i][j] = false;
-            path.pop_back();
-            step--;
-        }
-        if (!matrix[i][j + 1]) {
-            step++;
-            matrix[i][j] = true;
-            path.push_back('R');
-            Try(i, j + 1);
-            matrix[i][j] = false;
-            path.pop_back();
-            step--;
-        }
-        if (debug) {
-            printf("rollback (%d, %d)\n", i, j);
-        }
-    }
+    
     void solve(int r, int c, bool debug = false, bool showPath = false) {
-        this->debug = debug;
-        this->showPath = showPath;
-        Try(r, c);
+        vector<char> path;
+        Q.push(make_tuple(r, c, path));
+        matrix[r][c] = true;
+        while(!Q.empty()) {
+            tuple<int, int, vector<char>> e = Q.front(); Q.pop();
+            int i = get<0>(e);
+            int j = get<1>(e);
+            vector<char> path = get<2>(e);
+
+            if (debug) print(i, j);
+
+            if (i == 0 || i == N - 1 || j == 0 || j == M - 1) {
+                best = path.size() + 1;
+                best_path = path;
+                return;
+            }
+            if (!matrix[i - 1][j]) {
+                matrix[i - 1][j] = true;
+                vector<char> path_copy = path;
+                path_copy.push_back('U');
+                Q.push(make_tuple(i - 1, j, path_copy));
+            }
+            if (!matrix[i + 1][j]) {
+                matrix[i + 1][j] = true;
+                vector<char> path_copy = path;
+                path_copy.push_back('D');
+                Q.push(make_tuple(i + 1, j, path_copy));
+            }
+            if (!matrix[i][j - 1]) {
+                matrix[i][j - 1] = true;
+                vector<char> path_copy = path;
+                path_copy.push_back('L');
+                Q.push(make_tuple(i, j - 1, path_copy));
+            }
+            if (!matrix[i][j + 1]) {
+                matrix[i][j + 1] = true;
+                vector<char> path_copy = path;
+                path_copy.push_back('R');
+                Q.push(make_tuple(i, j + 1, path_copy));
+            }
+        }
+        best = -1;
     }
+
     void print(int x, int y) {
-        printf("possiton: (%d, %d)\tstep = %d\tbest = %d\n", x, y, step, best);
-        printf("path:\t\t"); for(char chr : this->path) cout << chr << " "; cout << endl;
-        printf("best_path:\t"); for(char chr : this->best_path) cout << chr << " "; cout << endl;
-        
+        printf("possiton: (%d, %d)\n", x, y);
         for (int i = 0; i != N; i++) {
             for (int j = 0; j != M; j++) { 
-                if (i != x || j != y) cout << matrix[i][j] << " ";
-                else if (matrix[i][j]) cout << "error" << " ";
-                else cout << "x" << " ";
+                if (i == x && j == y) cout << "[";
+                cout << matrix[i][j];
+                if (i == x && j == y) cout << "]";
+                cout << "\t";
             }
             cout << endl;
         }
-        if (step > best) cout << "stop! rollback" << endl;
         printf("***");
         char chr; cin >> chr;
         cout << endl;
     }
     void show() {
         if (showPath) {
-            printf("path: ");
-            for (char chr : this->best_path) cout << chr << " "; cout << endl; 
+            cout << "path: "; 
+            for (char chr : best_path) cout << chr << " "; 
+            cout << endl;
         }
-        if (best == INT_MAX) best = -2;
-        cout << best + 1 << endl;
+        cout << best << endl;
     }
 };
 
