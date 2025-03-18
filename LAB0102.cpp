@@ -22,18 +22,37 @@ private:
     queue<tuple<int, int, vector<char>>> Q; // <i, j, path>
     vector<vector<bool>> matrix;
     vector<char> best_path;
-    bool showPath;
-    bool debug;
+    int n, m, r, c;
     int best;
-    int M, N;
+    
 public:
-    void init(vector<vector<bool>> matrix) {
-        this->matrix = matrix;
-        this->N = matrix.size();
-        this->M = matrix[0].size();
+    void init(bool inputFromFile = false) {
+        if (inputFromFile) {
+            ifstream file("LAB0102.txt");
+            file >> n >> m >> r >> c;
+            for (int i = 0; i != n; i++) {
+                vector<bool> row;
+                for (int j = 0; j != m; j++) {
+                    bool e;  file >> e;
+                    row.push_back(e);
+                }
+                matrix.push_back(row);
+            }
+        } else {
+            cin >> n >> m >> r >> c;
+            for (int i = 0; i != n; i++) {
+                vector<bool> row;
+                for (int j = 0; j != m; j++) {
+                    bool e;  cin >> e;
+                    row.push_back(e);
+                }
+                matrix.push_back(row);
+            }
+        }
+        r--; c--; //corection
     }
     
-    void solve(int r, int c, bool debug = false, bool showPath = false) {
+    void solve(bool debug = false) {
         vector<char> path;
         Q.push(make_tuple(r, c, path));
         matrix[r][c] = true;
@@ -42,10 +61,8 @@ public:
             int i = get<0>(e);
             int j = get<1>(e);
             vector<char> path = get<2>(e);
-
             if (debug) print(i, j);
-
-            if (i == 0 || i == N - 1 || j == 0 || j == M - 1) {
+            if (i == 0 || i == n - 1 || j == 0 || j == m - 1) {
                 best = path.size() + 1;
                 best_path = path;
                 return;
@@ -80,8 +97,8 @@ public:
 
     void print(int x, int y) {
         printf("possiton: (%d, %d)\n", x, y);
-        for (int i = 0; i != N; i++) {
-            for (int j = 0; j != M; j++) { 
+        for (int i = 0; i != m; i++) {
+            for (int j = 0; j != m; j++) { 
                 if (i == x && j == y) cout << "[";
                 cout << matrix[i][j];
                 if (i == x && j == y) cout << "]";
@@ -93,7 +110,7 @@ public:
         char chr; cin >> chr;
         cout << endl;
     }
-    void show() {
+    void show(bool showPath = false) {
         if (showPath) {
             cout << "path: "; 
             for (char chr : best_path) cout << chr << " "; 
@@ -104,44 +121,17 @@ public:
 };
 
 int main() {
-    int n, m, r, c;
-    vector<vector<bool>> a;
+    Solution solution;
     bool inputFromFile = true; //set
-    if (inputFromFile) {
-        ifstream file("LAB0102Maze.txt");
-        file >> n >> m >> r >> c;
-        for (int i = 0; i != n; i++) {
-            vector<bool> row;
-            for (int j = 0; j != m; j++) {
-                bool e;  file >> e;
-                row.push_back(e);
-            }
-            a.push_back(row);
-        }
-    } else {
-        cin >> n >> m >> r >> c;
-        for (int i = 0; i != n; i++) {
-            vector<bool> row;
-            for (int j = 0; j != m; j++) {
-                bool e;  cin >> e;
-                row.push_back(e);
-            }
-            a.push_back(row);
-        }
-    }
     bool debug = false; //debug?
     bool showPath = false; //showPath?
     bool clock = false; //want to measure time?
     
+    solution.init(inputFromFile);
     auto start = chrono::high_resolution_clock::now();
-    
-    Solution solution;
-    solution.init(a);
-    solution.solve(r - 1, c - 1, debug, showPath);
-    solution.show();
-
+    solution.solve(debug);
+    solution.show(showPath);
     auto end = chrono::high_resolution_clock::now();
-    
     chrono::duration<double> elapsed = end - start;
     if (clock) cout << "Runtimes: " << 1000 * elapsed.count() << "ms\n";
     return 0;

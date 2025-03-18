@@ -43,19 +43,141 @@ Output
 #include <bits/stdc++.h>
 using namespace std;
 
-class Solution {
+class Telcodata {
 private:
-
+    string from_number;
+    string to_number;
+    string date;
+    string from_time;
+    string end_time;
 
 public:
-    void init() {
-
+    Telcodata(string telcodate) {
+        istringstream ss(telcodate);
+        string command, from_number, to_number, date, from_time, end_time;
+        ss >> command >> from_number >> to_number >> date >> from_time >> end_time;
+        this->from_number = from_number;
+        this->to_number = to_number;
+        this->date = date;
+        this->from_time = from_time;
+        this->end_time = end_time;
     }
-    void solve() {
 
-    };
+    bool isCorrect() {
+        return from_number.length() == 10 && to_number.length() == 10;
+    }
 
-    void show() {
+    string get_fromNumber() {
+        return this->from_number;
+    }
 
+    size_t get_totalTime() {
+        char chr;
+        istringstream str1(this->from_time);
+        size_t h1, m1, s1;
+        str1 >> h1 >> chr >> m1 >> chr >> s1;
+        istringstream str2(this->end_time);
+        size_t h2, m2, s2;
+        str2 >> h2 >> chr >> m2 >> chr >> s2;
+
+        if (s2 < s1) {
+            s2 += 60;
+            m2 --;
+        }
+        if (m2 < m1) {
+            m2 += 60;
+            h1--;
+        }
+        return (h2 - h1) * 3600 + (m2 - m1) * 60 + (s2 - s1);
     }
 };
+class Solution {
+private:
+    multimap<string, Telcodata> list; //<key = from_number, value = Telcodate>
+    vector<string> query_list;
+    vector<int> result;
+    bool isCorrect = true;
+
+public:
+    void init(bool inputFromFile = false) {
+        if (inputFromFile) {
+            ifstream file("LAB0101.txt");
+            string line;
+            while (getline(file, line)) {
+                if (line == "#") break;
+                Telcodata telcodate(line);
+                isCorrect = telcodate.isCorrect();
+                list.insert({telcodate.get_fromNumber(), telcodate});
+            }
+            while (getline(file, line)) {
+                if (line == "#") break;
+                query_list.push_back(line);
+            }
+        } else {
+            string line;
+            while (getline(cin, line)) {
+                if (line == "#") break;;
+                Telcodata telcodate(line);
+                isCorrect = telcodate.isCorrect();
+                list.insert({telcodate.get_fromNumber(), telcodate});
+            }
+            while (getline(cin, line)) {
+                if (line == "#") break;
+                query_list.push_back(line);
+            }
+        }
+    }
+    int query(string format) {
+        istringstream ss(format);
+        string command, value;
+        ss >> command >> value;
+        if (command == "?check_phone_number") {
+             return this->isCorrect;
+        } else if (command == "?number_calls_from") {
+            return this->list.count(value);
+        } else if (command == "?number_total_calls") {
+            return list.size();
+        } else if (command == "?count_time_calls_from") {
+            auto range = this->list.equal_range(value);
+            int total_times = 0;
+            for (auto it = range.first; it != range.second; it++) {
+                Telcodata tel = it->second;
+                total_times += tel.get_totalTime();
+            }
+            return total_times;
+        } else {
+            return -1;
+        }
+    }
+    void solve(bool debug = false) {
+        for (string line : query_list) {
+            result.push_back(query(line));
+            if (debug) {
+                cout << line << endl;
+                printf("ans: %d\n", query(line));
+                char chr; cin >> chr;
+            }
+        }
+    }
+
+    void show() {
+        for (const int& val: result) {
+            cout << val << endl;
+        }
+    }
+};
+
+int main() {
+    Solution solution;
+    bool inputFromFile = true; //set
+    bool debug = false; //debug?
+    bool clock = false; //want to measure time?
+    solution.init(inputFromFile);
+    auto start = chrono::high_resolution_clock::now();
+    solution.solve(debug);
+    solution.show();
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> elapsed = end - start;
+    if (clock) cout << "Runtimes: " << 1000 * elapsed.count() << "ms\n";
+    return 0;
+}
