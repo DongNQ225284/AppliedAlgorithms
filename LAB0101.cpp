@@ -1,8 +1,8 @@
 /*
-Problem: LAB.01.01 - Telco data check & query
+Problem: LAB.01.01 - Telco Data check & query
 Description
-Write a C program to perform some queries on a telco data (comming from stdin) with the following format:
-The first block of data consists of lines (terminated by a line containing #), each line (number of lines can be up to 100000) is under 
+Write a C program to perform some queries on a telco Data (comming from stdin) with the following format:
+The first block of Data consists of lines (terminated by a line containing #), each line (number of lines can be up to 100000) is under 
 the form: 
         call <from_number> <to_number> <date> <from_time> <end_time> 
 which is a call from the phone number <from_number> to a phone number <to_number> on <date>, and starting at time-point <from_time>, 
@@ -14,9 +14,9 @@ the phone number is incorrect)
  
 The second block consists of queries (terminated by a line containing #), each query in a line (number of lines can be up to 100000) 
 and belongs to one of the following types:
-?check_phone_number: print to stdout (in a new line) value 1 if no phone number is incorrect
+?check_phone_number: print to stdout (in a new line) val 1 if no phone number is incorrect
 ?number_calls_from <phone_number>: print to stdout (in a new line) the number of times a call is made from <phone_number>
-?number_total_calls: print to stdout (in a new line) the total number of calls of the data
+?number_total_calls: print to stdout (in a new line) the total number of calls of the Data
 ?count_time_calls_from <phone_number>: print to stdout (in a new line) the total time duration (in seconds) the calls are made from <phone_number>
 
 Example
@@ -41,43 +41,29 @@ Output
 120
 */
 #include <bits/stdc++.h>
+#define ll long long
 using namespace std;
 
-class Telcodata {
-private:
-    string from_number;
-    string to_number;
+struct Data {
+    string from_num; //key
+    string to_num;
     string date;
     string from_time;
     string end_time;
-
-public:
-    Telcodata(string telcodate) {
-        istringstream ss(telcodate);
-        string command, from_number, to_number, date, from_time, end_time;
-        ss >> command >> from_number >> to_number >> date >> from_time >> end_time;
-        this->from_number = from_number;
-        this->to_number = to_number;
-        this->date = date;
-        this->from_time = from_time;
-        this->end_time = end_time;
-    }
-
-    bool isCorrect() {
-        return from_number.length() == 10 && to_number.length() == 10;
-    }
-
-    string get_fromNumber() {
-        return this->from_number;
-    }
-
-    size_t get_totalTime() {
+    ll total_time;
+    bool is_correct;
+    Data(string input) {
+        istringstream ss(input);
+        string cmd;
+        ss >> cmd >> from_num >> to_num >> date >> from_time >> end_time;
+    
         char chr;
-        istringstream str1(this->from_time);
-        size_t h1, m1, s1;
+        istringstream str1(from_time);
+        ll h1, m1, s1;
         str1 >> h1 >> chr >> m1 >> chr >> s1;
-        istringstream str2(this->end_time);
-        size_t h2, m2, s2;
+        
+        istringstream str2(end_time);
+        ll h2, m2, s2;
         str2 >> h2 >> chr >> m2 >> chr >> s2;
 
         if (s2 < s1) {
@@ -88,96 +74,58 @@ public:
             m2 += 60;
             h2--;
         }
-        return (h2 - h1) * 3600 + (m2 - m1) * 60 + (s2 - s1);
+        total_time = (h2 - h1) * 3600 + (m2 - m1) * 60 + (s2 - s1);
+        is_correct = from_num.length() == 10 && to_num.length() == 10;
     }
 };
-class Solution {
-private:
-    multimap<string, Telcodata> list; //<key = from_number, value = Telcodate>
-    vector<string> query_list;
-    vector<int> result;
-    bool isCorrect = true;
 
-public:
-    void init(bool inputFromFile = false) {
-        if (inputFromFile) {
-            ifstream file("LAB0101.txt");
-            string line;
-            while (getline(file, line)) {
-                if (line == "#") break;
-                Telcodata telcodate(line);
-                isCorrect = telcodate.isCorrect();
-                list.insert({telcodate.get_fromNumber(), telcodate});
-            }
-            while (getline(file, line)) {
-                if (line == "#") break;
-                query_list.push_back(line);
-            }
-        } else {
-            string line;
-            while (getline(cin, line)) {
-                if (line == "#") break;;
-                Telcodata telcodate(line);
-                isCorrect = telcodate.isCorrect();
-                list.insert({telcodate.get_fromNumber(), telcodate});
-            }
-            while (getline(cin, line)) {
-                if (line == "#") break;
-                query_list.push_back(line);
-            }
-        }
-    }
-    int query(string format) {
-        istringstream ss(format);
-        string command, value;
-        ss >> command >> value;
-        if (command == "?check_phone_number") {
-             return this->isCorrect;
-        } else if (command == "?number_calls_from") {
-            return this->list.count(value);
-        } else if (command == "?number_total_calls") {
-            return list.size();
-        } else if (command == "?count_time_calls_from") {
-            auto range = this->list.equal_range(value);
-            int total_times = 0;
-            for (auto it = range.first; it != range.second; it++) {
-                Telcodata tel = it->second;
-                total_times += tel.get_totalTime();
-            }
-            return total_times;
-        } else {
-            return -1;
-        }
-    }
-    void solve(bool debug = false) {
-        for (string line : query_list) {
-            result.push_back(query(line));
-            if (debug) {
-                cout << line << endl;
-                printf("ans: %d\n", query(line));
-                char chr; cin >> chr;
-            }
-        }
-    }
+multimap<string, Data> List;
+ll incorrect = 0;
 
-    void show() {
-        for (const int& val: result) {
-            cout << val << endl;
-        }
+void input() {
+    string line;
+    while (getline(cin, line)) {
+        if (line == "#") break;;
+        Data tel(line);
+        incorrect += !tel.is_correct;
+        List.insert({tel.from_num, tel});
     }
-};
+}
+
+ll query(string format) {
+    istringstream ss(format);
+    string cmd, val;
+    ss >> cmd >> val;
+    if (cmd == "?check_phone_number") {
+         return incorrect == 0;
+    } else if (cmd == "?number_calls_from") {
+        return List.count(val);
+    } else if (cmd == "?number_total_calls") {
+        return List.size();
+    } else if (cmd == "?count_time_calls_from") {
+        auto range = List.equal_range(val);
+        ll sum = 0;
+        for (auto it = range.first; it != range.second; it++) {
+            Data tel = it->second;
+            sum += tel.total_time;
+        }
+        return sum;
+    } else {
+        return -1;
+    }
+}
+
+void solve() {
+    string line;
+    while (getline(cin, line)) {
+        if (line == "#") break;
+        cout << query(line) << endl;
+    }
+}
 
 int main() {
-    Solution solution;
-    bool inputFromFile = true; //set
-    bool debug = false; //debug?
-    bool clock = false; //want to measure time?
-    solution.init(inputFromFile);
-    auto start = chrono::high_resolution_clock::now();
-    solution.solve(debug);
-    solution.show();
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed = end - start;
-    if (clock) cout << "Runtimes: " << 1000 * elapsed.count() << "ms\n";
+    input();
+    solve();
     return 0;
 }
+
