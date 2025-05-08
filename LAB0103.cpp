@@ -1,18 +1,24 @@
 /*
-Problem: LAB.01.03 - Range Minimum Query
-Description:
-Given a sequence of n integers a0,. . .,an-1. 
-We denote rmq(i,j) the minimum element of the sequence ai, ai+1, . . .,aj. 
-Given m pairs (i1, j1),. . .,(im, jm), compute the sum Q = rmq(i1,j1) + . . . + rmq(im, jm)
+LAB.01.03 - Truy vấn giá trị nhỏ nhất trong đoạn
+Mô tả:
+Cho một dãy gồm n số nguyên: a₀, a₁, ..., aₙ₋₁.
+Gọi rmq(i, j) là giá trị nhỏ nhất trong đoạn con aᵢ, aᵢ₊₁, ..., aⱼ.
+
+Bạn được cung cấp m cặp chỉ số (i₁, j₁), ..., (iₘ, jₘ), yêu cầu tính tổng:
+Q = rmq(i₁, j₁) + rmq(i₂, j₂) + ... + rmq(iₘ, jₘ)
+
 Input:
-Line 1: n (1 <=  n <= 10^6)
-Line 2: a0, . . . ,an-1 (1 <= ai <= 10^6)
-line 3: m (1 <= m <= 10^6)
-Line k+3 (k=1, . . ., m): ik, jk (0 <= ik < jk < n)
+Dòng 1: Một số nguyên n (1 ≤ n ≤ 10⁶)
+Dòng 2: n số nguyên a₀, a₁, ..., aₙ₋₁ (1 ≤ aᵢ ≤ 10⁶)
+Dòng 3: Một số nguyên m (1 ≤ m ≤ 10⁶)
+
+Tiếp theo m dòng: Mỗi dòng gồm hai số nguyên iₖ và jₖ (0 ≤ iₖ < jₖ < n), tương ứng với mỗi truy vấn
+
 Output:
-Write the value Q
-Example
-Input
+In ra tổng giá trị Q tính được.
+
+Ví dụ
+Input:
 16
 2 4 6 1 6 8 7 3 3 5 8 9 1 2 6 4
 4
@@ -20,45 +26,68 @@ Input
 0 9
 1 15
 6 10
-
-Output
+Output:
 6
 */
 #include <bits/stdc++.h>
 #define ll long long
-#define MAX = 4e6
+#define MAX (ll)4e6
 using namespace std;
 
-ll n;
-ll a[MAX], T[MAX];
-
-void build(ll node, ll start, ll end) {
-    if (start == end) {
-        T[node] = a[start];
-        return;
-    } 
-    ll mid = (start + end) / 2;
-    build(2 * node, start, mid);
-    build(2 * node + 1, mid + 1, end);
-    T[node] = min(a[2 * node], a[2 * node + 1]);
-}
+ll n, m;
+vector<ll> a, T;
 
 void input() {
     cin >> n;
+    a.resize(n);
+    T.resize(4 * n);
     for (ll i = 0; i != n; i++) cin >> a[i];
-    build(1, 0, n - 1);
 }
 
-ll rmq(ll node, ll start, ll end, ll left, ll right) {
-    if (left > right) return INT_MAX;
-    if (left == right) return a[left];
-    if (right < start || left > end) return INT_MAX;
-    if (start <= left && rihgt >= end) return T[node];
-    if ()
-    if ()
+void build(ll id, ll l, ll r) {
+    if (l == r) {
+        T[id] = a[l];
+        return;
+    } 
+    ll mid = (l + r) / 2;
+    build(2 * id, l, mid);
+    build(2 * id + 1, mid + 1, r);
+    T[id] = min(T[2 * id], T[2 * id + 1]);
+}
+
+ll query(ll id, ll l, ll r, ll u, ll v) {
+    if (l > v || r < u) return MAX;
+    if (l >= u && r <= v) return T[id];
+    ll mid = (l + r) / 2;
+    ll lval = query(2 * id, l, mid, u, v);
+    ll rval = query(2 * id + 1, mid + 1, r, u, v);
+    return min(lval, rval);
+}
+
+void update(ll id, ll l, ll r, ll i, ll val) {
+    if (i < l || i > r) return;
+    if (l == r) {
+        T[l] = val;
+        return;
+    }
+    ll mid = (l + r) / 2;
+    if (i <= mid) update(2 * id, l, mid, i, val);
+    else update(2 * id + 1, mid + 1, r, i, val); 
+    T[id] = min(T[2 * id], T[2 * id + 1]);
+}
+
+void solve() {
+    build(1, 0, n - 1);
+    cin >> m;
+    ll sum = 0;
+    while(m--) {
+        ll i, j; cin >> i >> j;
+        sum += query(1, 0, n - 1, i, j);
+    }
+    cout << sum << endl;
 }
 int main() {
     input();
-    build(1, 0, n - 1);
-
+    solve();
+    return 0;
 }

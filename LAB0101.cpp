@@ -1,26 +1,41 @@
 /*
-Problem: LAB.01.01 - Telco Data check & query
-Description
-Write a C program to perform some queries on a telco Data (comming from stdin) with the following format:
-The first block of Data consists of lines (terminated by a line containing #), each line (number of lines can be up to 100000) is under 
-the form: 
-        call <from_number> <to_number> <date> <from_time> <end_time> 
-which is a call from the phone number <from_number> to a phone number <to_number> on <date>, and starting at time-point <from_time>, 
-terminating at time-point <end_time>
-<from_number> and <to_number> are string of 10 characters (a phone number is correct if it contains only digits 0,1,...,9, otherwise, 
-the phone number is incorrect)
-<date> is under the form YYYY-MM-DD (for example 2022-10-21)
-<from_time> and <to_time> are under the form hh:mm:ss (for example, 10:07:23)
- 
-The second block consists of queries (terminated by a line containing #), each query in a line (number of lines can be up to 100000) 
-and belongs to one of the following types:
-?check_phone_number: print to stdout (in a new line) val 1 if no phone number is incorrect
-?number_calls_from <phone_number>: print to stdout (in a new line) the number of times a call is made from <phone_number>
-?number_total_calls: print to stdout (in a new line) the total number of calls of the Data
-?count_time_calls_from <phone_number>: print to stdout (in a new line) the total time duration (in seconds) the calls are made from <phone_number>
+LAB.01.01 - Kiểm tra & truy vấn dữ liệu viễn thông
+Mô tả
+Viết một chương trình để thực hiện một số truy vấn trên dữ liệu viễn thông (được nhập từ stdin) với định dạng như sau:
 
-Example
-Input
+Khối dữ liệu đầu tiên
+Gồm nhiều dòng (kết thúc bằng một dòng chứa dấu #, tổng số dòng có thể lên đến 100.000),
+mỗi dòng có dạng:
+call <from_number> <to_number> <date> <from_time> <end_time>
+Nghĩa là một cuộc gọi từ số điện thoại <from_number> đến <to_number> vào ngày <date>,
+bắt đầu lúc <from_time> và kết thúc lúc <end_time>.
+
+Giải thích chi tiết:
+<from_number> và <to_number> là chuỗi gồm 10 ký tự
+(một số điện thoại là hợp lệ nếu chỉ chứa các chữ số từ 0 đến 9, nếu có ký tự khác thì không hợp lệ).
+
+<date> có dạng YYYY-MM-DD (ví dụ: 2022-10-21)
+
+<from_time> và <to_time> có dạng hh:mm:ss (ví dụ: 10:07:23)
+
+Khối truy vấn thứ hai
+Gồm nhiều dòng (kết thúc bằng một dòng chứa dấu #, tổng số dòng có thể lên đến 100.000),
+mỗi dòng là một truy vấn thuộc một trong các loại sau:
+
+?check_phone_number
+→ In ra 1 nếu không có số điện thoại nào sai định dạng, ngược lại là 0.
+
+?number_calls_from <phone_number>
+→ In ra số lần gọi được thực hiện từ số điện thoại <phone_number>.
+
+?number_total_calls
+→ In ra tổng số cuộc gọi trong toàn bộ dữ liệu.
+
+?count_time_calls_from <phone_number>
+→ In ra tổng thời gian gọi (tính bằng giây) từ số điện thoại <phone_number>.
+
+Ví dụ
+Input:
 call 0912345678 0132465789 2022-07-12 10:30:23 10:32:00
 call 0912345678 0945324545 2022-07-13 11:30:10 11:35:11
 call 0132465789 0945324545 2022-07-13 11:30:23 11:32:23
@@ -32,13 +47,13 @@ call 0945324545 0912345678 2022-07-13 07:30:23 07:48:30
 ?count_time_calls_from 0912345678
 ?count_time_calls_from 0132465789
 #
-
-Output
+Output:
 1
 2
 4
 398
 120
+
 */
 #include <bits/stdc++.h>
 #define ll long long

@@ -1,29 +1,29 @@
 /*
-LAB.03.03 - Max-Distance Sub-Sequence
-Mô tả
-Given N elements (2≤ N ≤100,000) on a straight line at positions x1,…, xN (0≤ xi ≤1000000000).
-The distance of a subset of N elements is defined to be the minimum distance between two elements.
-Find the subset of N given elements containing exactly C elements such that the distance is maximal.
-Input
-The first line contains a positive integer T (1 <= T <= 20) which is the number of test cases. 
-Subsequent lines are T test cases with the following format:
-Line 1: Two space-separated integers: N and C
-Lines 2: contains  x1, x2, . . . , xN
+LAB.03.03 - Dãy con có khoảng cách lớn nhất
+Mô tả:
+Cho N phần tử (2 ≤ N ≤ 100,000) trên một đường thẳng tại các vị trí 𝑥1,𝑥2,…,𝑥𝑁  (0 ≤ 𝑥𝑖​ ≤ 1,000,000,000).
+Khoảng cách của một dãy con bao gồm N phần tử được định nghĩa là khoảng cách nhỏ nhất giữa hai phần tử trong dãy con đó.
+Tìm một dãy con chứa chính xác C phần tử từ N phần tử cho trước sao cho khoảng cách này là lớn nhất.
 
-Output
-For each test case output one integer: the distance of the subset found.
+Dữ liệu vào (Input):
+Dòng 1: Một số nguyên dương T (1 ≤ T ≤ 20) là số lượng test case.
+Dòng 2 đến Dòng T+1: Mỗi test case có định dạng:
+Dòng 1: Hai số nguyên cách nhau bởi dấu cách: N và C.
+Dòng 2: Chứa dãy số 𝑥1,𝑥2,…,𝑥𝑁 — các vị trí của các phần tử.
 
-Example
-input
+Kết quả (Output):
+Với mỗi test case, in ra một số nguyên duy nhất: khoảng cách của dãy con tìm được.
+
+Ví dụ:
+Input:
 1
 5 3
 1 2 8 4 9
-output
+Output:
 3
-
-Explain: Jonh can put his 3 cows in the stalls at positions 1, 4 and 8, resulting in a minimum distance of 3.
+Giải thích:
+Jonh có thể đặt 3 con bò của mình vào các chuồng có vị trí lần lượt là 1, 4 và 8, tạo ra một khoảng cách tối thiểu giữa các con bò là 3.
 */
-
 #include <bits/stdc++.h>
 #define ll long long
 using namespace std;

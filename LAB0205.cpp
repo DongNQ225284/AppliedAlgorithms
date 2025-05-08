@@ -1,22 +1,26 @@
 /*
-Problem: LAB.02.05 - Cut Material
-Description
-Given a material having the shape rectangle with height H and width W. We need to cut this material into n smaller rectangle 
-submaterials of size (h1,w1), (h2, w2), ..., (hn, wn). Write a program to check if we can perform this cut.
-Input
-Line 1: contains two positive integers H, W (1 <= H, W <= 10)
-Line 2: contains a positive integer n (1 <= n <= 10)
-Line i+2 (i= 1,...,n): contains two positive integer hi and wi (1 <= hi, wi <= 10)
-Output
-Write 1 if we can perform the cut and write 0, otherwise.
-Example
-Input
+LAB.02.05 - Cắt vật liệu
+Mô tả:
+Cho một tấm vật liệu có hình chữ nhật với chiều cao H và chiều rộng W. 
+Chúng ta cần cắt tấm vật liệu này thành n tấm nhỏ hơn có kích thước lần lượt là (h1, w1), (h2, w2), ..., (hn, wn). 
+Viết chương trình kiểm tra xem có thể thực hiện việc cắt này hay không.
+
+Dữ liệu vào (Input):
+Dòng 1: Hai số nguyên dương H và W (1 ≤ H, W ≤ 10) — chiều cao và chiều rộng của tấm vật liệu ban đầu.
+Dòng 2: Một số nguyên dương n (1 ≤ n ≤ 10) — số lượng tấm nhỏ cần cắt ra.
+Dòng i+2 (i = 1,...,n): Mỗi dòng chứa hai số nguyên dương hi và wi (1 ≤ hi, wi ≤ 10) — chiều cao và chiều rộng của từng tấm nhỏ cần cắt.
+
+Kết quả (Output):
+In ra 1 nếu có thể thực hiện việc cắt và in ra 0 nếu không thể.
+
+Ví dụ:
+Input:
 7 5
 4
 1 5
 6 2
 2 2
 4 3
-Output
+Output:
 1
 */

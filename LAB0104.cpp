@@ -40,3 +40,59 @@ Dữ liệu
 Kết quả
 6
 */
+
+#include <bits/stdc++.h>
+#define ll long long
+#define MAX 1005
+using namespace std;
+
+ll n, m;
+vector<vector<ll>> A;
+
+void input() {
+    cin >> n >> m;
+    A.resize(n, vector<ll>(m));      
+    for (ll i = 0; i < n; i++) {
+        for (ll j = 0; j < m; j++) cin >> A[i][j]; 
+    }
+}
+
+ll solve_sub(vector<ll> h) {
+    vector<ll> L(h.size());
+    vector<ll> R(h.size());
+    stack<ll> S;
+    S.push(0);
+    for (ll i = 1; i < h.size(); i++) {
+        if (h[i] > h[S.top()]) S.push(i);
+        else S.pop();
+        L[i] = S.top();
+    }
+    last = h.size() - 1;
+    R[last] = last;
+    for (ll i = h.size() - 2; i >= 0; i--) {
+        if (h[i] <= h[last]) R[i] = last;
+        else {
+            last = i;
+            R[i] = i;
+        }
+    }
+    cout << "L: "; for (auto val : L) cout << val << " "; cout << endl;
+    cout << "R: "; for (auto val : R) cout << val << " "; cout << endl; 
+ 
+    ll bestArea = 0;
+    for (ll i = 0; i < h.size(); i++) {
+        bestArea = max(bestArea, h[i] * (R[i] - L[i] + 1));
+    }
+    return bestArea;
+}
+
+
+ll solve() {
+
+}
+int main() {
+    //input();
+    vector<ll> h = {1, 2, 3, 2, 5};
+    cout << solve_sub(h);
+    return 0;
+}

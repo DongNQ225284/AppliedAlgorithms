@@ -1,23 +1,23 @@
 /*
-Problem: LAB.02.03 - Balanced Courses Assignments
-Description
-At the beginning of the semester, the head of a computer science department D have 
-to assign courses to teachers in a balanced way. The department D has m teachers T={1,2,...,m} and n courses C={1,2,...,n}. 
-Each teacher t∈T has a preference list which is a list of courses he/she can teach depending on his/her specialization. 
-We known a list of pairs of conflicting two courses that cannot be assigned to the same teacher as these courses have been 
-already scheduled in the same slot of the timetable. The load of a teacher is the number of courses assigned to her/him. 
-How to assign nn courses to mm teacher such that each course assigned to a teacher is in his/her preference list, no two 
-conflicting courses are assigned to the same teacher, and the maximal load is minimal.
-Input
-The input consists of following lines
-Line 1: contains two integer m and n (1≤m≤10, 1≤n≤30)
-Line i+1: contains an positive integer k and k positive integers indicating the courses that teacher i can teach (∀i=1,…,m)
-Line m+2: contains an integer k
-Line i+m+k: contains two integer i and j indicating two conflicting courses (∀i=1,…,k)
-Output
-The output contains a unique number which is the maximal load of the teachers in the solution found and the value -1 if not solution found.
-Example
-Input
+LAB.02.03 - Phân công khóa học cân bằng
+Mô tả:
+Vào đầu học kỳ, trưởng khoa của một khoa khoa học máy tính phải phân công các khóa học cho các giảng viên một cách cân bằng. Khoa D có m giảng viên T = {1, 2, ..., m} và n khóa học C = {1, 2, ..., n}.
+Mỗi giảng viên t ∈ T có một danh sách ưu tiên là các khóa học mà giảng viên đó có thể giảng dạy, tùy thuộc vào chuyên môn của họ.
+Chúng ta cũng biết một danh sách các cặp khóa học mâu thuẫn không thể giao cho cùng một giảng viên, vì những khóa học này đã được lên lịch trong cùng một thời gian biểu.
+Tải của một giảng viên là số lượng khóa học được giao cho giảng viên đó.
+Câu hỏi là làm thế nào để phân công n khóa học cho m giảng viên sao cho mỗi khóa học được giao cho một giảng viên thuộc danh sách ưu tiên của giảng viên đó, không có hai khóa học mâu thuẫn được giao cho cùng một giảng viên, và tải cao nhất của giảng viên là nhỏ nhất.
+
+Dữ liệu vào (Input):
+Dòng 1: Hai số nguyên m và n (1 ≤ m ≤ 10, 1 ≤ n ≤ 30)
+Dòng i+1 (i=1, 2, ..., m): Mỗi dòng chứa một số nguyên dương k và k số nguyên dương chỉ các khóa học mà giảng viên i có thể giảng dạy (∀i = 1, ..., m)
+Dòng m+2: Một số nguyên dương k (là số cặp khóa học mâu thuẫn)
+Dòng i+m+k: Mỗi dòng chứa hai số nguyên i và j chỉ hai khóa học mâu thuẫn (∀i = 1, ..., k)
+
+Kết quả (Output):
+In ra một số duy nhất là tải cao nhất của giảng viên trong giải pháp tìm được. Nếu không thể tìm được giải pháp, in ra -1.
+
+Ví dụ:
+Input:
 4 12
 5 1 3 5 10 12
 5 9 3 4 8 12
@@ -49,8 +49,7 @@ Input
 9 12
 10 11
 11 12
-
-Output
+Output:
 3
 */
 #include <bits/stdc++.h>
