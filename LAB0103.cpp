@@ -31,11 +31,11 @@ Output:
 */
 #include <bits/stdc++.h>
 #define ll long long
-#define MAX (ll)4e6
+#define MAX 4e6
 using namespace std;
 
 ll n, m;
-vector<ll> a, T;
+vector<ll> a, T; //T là cây lưu trữ, tổ chức dưới dạng mảng
 
 void input() {
     cin >> n;
@@ -44,36 +44,60 @@ void input() {
     for (ll i = 0; i != n; i++) cin >> a[i];
 }
 
-void build(ll id, ll l, ll r) {
-    if (l == r) {
+//xây dựng Segment Tree
+void build(ll id, ll l, ll r) //id: vị trí của node hiện tại, <l, r> đoạn mà node id quản lý 
+{
+    if (l == r) //Nếu là node lá thực hiện lưu 
+    {
         T[id] = a[l];
         return;
     } 
+    //Nếu chưa phải node lá
     ll mid = (l + r) / 2;
-    build(2 * id, l, mid);
-    build(2 * id + 1, mid + 1, r);
-    T[id] = min(T[2 * id], T[2 * id + 1]);
+    build(2 * id, l, mid); //Xây dựng nhánh bên trái, đoạn <l, mid> do node có vị trí 2*id quản lý
+    build(2 * id + 1, mid + 1, r); //Xây dựng nhánh bên trái, đoạn <mid + 1, r> do node có vị trí 2*id+1 quản lý
+    //Xây dựng xong nhánh trái và phải
+    T[id] = min(T[2 * id], T[2 * id + 1]); //Cập nhật giá trị ở node hiện tại 
 }
 
-ll query(ll id, ll l, ll r, ll u, ll v) {
-    if (l > v || r < u) return MAX;
-    if (l >= u && r <= v) return T[id];
+/*
+Ví dụ: 
+Node [id|l r|value]: Node có giá trị value, vị trí id, quản lý đoạn [l, r]
+Mảng a: [2 1 4 3]
+                       [1|0 3|1]
+                    /             \
+       [2|0 1|1]                    [3|2 3|3]
+         /    \                      /     \
+[4|0 0|2]     [5|1 1|1]     [6|2 2]|4]     [7|3 3]|3]
+*/
+
+//Truy vấn trên cây
+ll query(ll id, ll l, ll r, ll u, ll v) //id: Vị trí node, <l, r> đoạn mà node quản lý, <u, v> đoạn truy vấn
+{
+    if (l > v || r < u) return MAX;  //<l, r> không giao với <u, v> trả về MAX
+    if (l >= u && r <= v) return T[id]; //<l, r> nằm bên trong <u, v> trả về giá trị node id quản lý đoạn <l, r>
+    //<l, r> giao một phần với <u, v>
     ll mid = (l + r) / 2;
-    ll lval = query(2 * id, l, mid, u, v);
-    ll rval = query(2 * id + 1, mid + 1, r, u, v);
-    return min(lval, rval);
+    ll lval = query(2 * id, l, mid, u, v); //giá trị nhánh trái
+    ll rval = query(2 * id + 1, mid + 1, r, u, v); //giá tị nhánh phải
+    return min(lval, rval); 
 }
 
-void update(ll id, ll l, ll r, ll i, ll val) {
-    if (i < l || i > r) return;
-    if (l == r) {
+//cập nhật giá trị
+void update(ll id, ll l, ll r, ll i, ll val) //id: vị trí node trong cây, <l, r> đoạn node id quản lý, i: vị trí của phần tử cần cập nhật trong mảng, val: giá trị cập nhật
+{
+    if (i < l || i > r) return; //i không thuộc <l, r>
+    if (l == r) //nếu là node lá --> cần update 
+    {
         T[l] = val;
         return;
     }
     ll mid = (l + r) / 2;
-    if (i <= mid) update(2 * id, l, mid, i, val);
-    else update(2 * id + 1, mid + 1, r, i, val); 
-    T[id] = min(T[2 * id], T[2 * id + 1]);
+    if (i <= mid) //nếu i thuộc nhánh trái 
+        update(2 * id, l, mid, i, val); //cập nhật nhánh trái
+    else //nếu i thuộc nhánh phải
+        update(2 * id + 1, mid + 1, r, i, val); //cập nhật nhánh phải 
+    T[id] = min(T[2 * id], T[2 * id + 1]); //cập nhật node id
 }
 
 void solve() {

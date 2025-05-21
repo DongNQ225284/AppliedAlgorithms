@@ -53,12 +53,12 @@ Output:
 4
 398
 120
-
 */
 #include <bits/stdc++.h>
 #define ll long long
 using namespace std;
 
+//Cấu trúc lưu trữ
 struct Data {
     string from_num; //key
     string to_num;
@@ -66,12 +66,14 @@ struct Data {
     string from_time;
     string end_time;
     ll total_time;
-    bool is_correct;
+    bool is_correct; //dữ liệu có hợp lệ?
+
     Data(string input) {
+        //tách dữ liệu vào các trường
         istringstream ss(input);
         string cmd;
         ss >> cmd >> from_num >> to_num >> date >> from_time >> end_time;
-    
+
         char chr;
         istringstream str1(from_time);
         ll h1, m1, s1;
@@ -81,6 +83,7 @@ struct Data {
         ll h2, m2, s2;
         str2 >> h2 >> chr >> m2 >> chr >> s2;
 
+        //tính total_time
         if (s2 < s1) {
             s2 += 60;
             m2 --;
@@ -90,12 +93,14 @@ struct Data {
             h2--;
         }
         total_time = (h2 - h1) * 3600 + (m2 - m1) * 60 + (s2 - s1);
+        //kiểm tra dữ liệu có hợp lệ không?
         is_correct = from_num.length() == 10 && to_num.length() == 10;
     }
 };
 
-multimap<string, Data> List;
-ll incorrect = 0;
+//sử dụng map để lưu trữ
+multimap<string, Data> List; 
+ll incorrect = 0; 
 
 void input() {
     string line;
@@ -120,6 +125,7 @@ ll query(string format) {
     } else if (cmd == "?count_time_calls_from") {
         auto range = List.equal_range(val);
         ll sum = 0;
+        //lấy ra các phần tử có key là from_num, thực hiện tính tổng total_time
         for (auto it = range.first; it != range.second; it++) {
             Data tel = it->second;
             sum += tel.total_time;

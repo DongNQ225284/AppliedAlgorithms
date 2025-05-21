@@ -18,25 +18,28 @@ Ghi giá số bước cần di chuyển ngắn nhất để thoát ra khỏi mê
 #define ll long long
 using namespace std;
 
+//cấu trúc lưu trữ của trạng thái hiện tại
 struct Data {
     ll x, y, c;
     Data(ll x, ll y, ll c = 0) {
-        this->x = x;
-        this->y = y;
-        this->c = c;
+        this->x = x; //tọa độ x
+        this->y = y; //tọa độ y
+        this->c = c; //số bước đi tính từ vị trí ban đầu
     }
 };
 
+//khi di chuyển tới một hướng dir
 Data operator+ (Data pos, pair<ll, ll> dir) {
-    ll x = pos.x + dir.first;
+    ll x = pos.x + dir.first; 
     ll y = pos.y + dir.second;
     ll c = pos.c + 1;
     return Data(x, y, c);
 }
 
 int n, m, r, c;
-ll A[1000][1000];
+ll A[1000][1000]; //mảng đánh dấu những ô đã đi qua
 
+//hướng di chuyển: Trái, Lên, Phải, Xuống
 pair<ll,ll> dir[4] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 queue<Data> Q;
 
@@ -49,6 +52,7 @@ void input() {
     }
 }
 
+//Sử dụng BFS để tìm đường đi
 ll solve() {
     Data pos(r - 1, c - 1, 1);
     Q.push(pos);
