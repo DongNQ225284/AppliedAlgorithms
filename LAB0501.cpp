@@ -31,3 +31,53 @@ Dữ liệu vào:
 Dữ liệu ra:
 3
 */
+#include <bits/stdc++.h>
+#define ll long long
+using namespace std;
+
+const ll MAX = 100005;
+vector<ll> G[MAX], g[MAX];
+vector<ll> S;
+
+ll V1[MAX], V2[MAX]; // Mảng đánh dấu visited
+ll N, M, Count = 0;
+
+void input() {
+    cin >> N >> M;
+    for (int i = 0; i < M; i++) {
+        ll u, v;
+        cin >> u >> v;
+        G[u].push_back(v); // Đồ thị gốc
+        g[v].push_back(u); // Đồ thị chuyển vị
+    }
+}
+
+void dfs1(ll v) {
+    V1[v] = true;
+    for (ll u : G[v]) {
+        if (!V1[u]) dfs1(u);
+    }
+    S.push_back(v);
+}
+
+void dfs2(ll v) {
+    V2[v] = true;
+    for (ll u : g[v]) {
+        if (!V2[u]) dfs2(u);
+    }
+}
+
+int main() {
+    input();
+    for (ll i = 1; i <= N; i++) {
+        if (!V1[i]) dfs1(i);
+    }
+    for (ll i = S.size() - 1; i >= 0; i--) {
+        if (!V2[S[i]]) {
+            dfs2(S[i]);
+            Count++;
+        }
+    }
+    cout << Count << endl;
+    return 0;
+}

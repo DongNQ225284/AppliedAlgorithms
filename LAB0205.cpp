@@ -28,6 +28,8 @@ Cấu trúc lưu trữ:
 Khởi tạo một struct để đóng gói thông tin về cách đặt, (x, y) là tọa độ góc trái, rotated là có xoay 90 không
 Lời giải của bài toán là Place x[i] cho biết cách đặt của tấm kim loại thứ i
 Không gian lời giải của bài toán là các điểm đặt trong tấm kim loại và hướng xoay
+
+Sử dụng M[i][j] để đánh dấu những ô đã cắt
 */
 
 #include <bits/stdc++.h>
