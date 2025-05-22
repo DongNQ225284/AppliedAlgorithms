@@ -13,6 +13,14 @@ Dòng i+1 (i=1,...,n): ghi dòng thứ i của ma trận A
 
 Output
 Ghi giá số bước cần di chuyển ngắn nhất để thoát ra khỏi mê cung, hoặc ghi giá trị -1 nếu không tìm thấy đường đi nào thoát ra khỏi mê cung.
+
+
+Cấu trúc lưu trữ: 
+Tạo một struct để đóng gói dữ liệu tọa độ (x, y) và số bước di chuyển tính từ thời gian ban đầu
+Khi di chuyển tới một ô mới, tọa độ (x, y) thay đổi và số bước cộng thêm 1
+
+A[i][j] thể hiện ma trận, đồng thời thể hiện những vị trí đã di chuyển
+Sử dụng queue Q để thực hiện BFS
 */
 #include <bits/stdc++.h>
 #define ll long long

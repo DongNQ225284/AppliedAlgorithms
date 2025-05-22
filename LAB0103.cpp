@@ -28,6 +28,10 @@ Input:
 6 10
 Output:
 6
+
+Cấu trúc lưu trữ: 
+T là segment tree được tổ chức dưới dạng mảng
+
 */
 #include <bits/stdc++.h>
 #define ll long long

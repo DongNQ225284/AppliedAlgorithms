@@ -53,6 +53,15 @@ Output:
 4
 398
 120
+
+Cấu trúc lưu trữ: 
+Tạo một struct Data để đóng gói dữ liệu from_num, to_num, data, from_time, end_time 
+và thực hiện các công việc liên quan đến tiền xử lý dữ liệu: 
+    + Chuyển string thành các token
+    + Kiểm tra tính hợp lệ của dữ liệu: is_correct
+    + Tính tổng thời gian cuộc gọi: total_time
+
+Để tăng hiệu quả truy vấn, sử dụng cấu trúc multimap với key là from_number và value là Data
 */
 #include <bits/stdc++.h>
 #define ll long long

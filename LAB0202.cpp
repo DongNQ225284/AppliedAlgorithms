@@ -25,71 +25,62 @@ Input:
 Output:
 25
 
+Cấu trúc lưu trữ:
+best: Độ dài tuyến đường ngắn nhất
+x[i]: Tại vị trí i sẽ di chuyển tới địa điểm x[i]
+C[i][j]: Khoảng cách từ thành phố i đến j
+M[i]: Nếu hành khách thứ i đã đón thì M[i] = 1, nếu chưa đón M[i] = 0
 */
 
 #include <bits/stdc++.h>
+#define ll long long
+#define MAX 30
 using namespace std;
 
-int n, cap;
-vector<vector<int>> C;
-vector<bool> mark;
-vector<int> x;
-vector<int> V;
-int load, cost, best = 1e9, c_min = 1e9;
+ll x[MAX], M[MAX], C[MAX][MAX];
+ll n, K, load = 0, best = 1e10, dis = 0;
+ll c_min = 1e10;
 
 void input() {
-    cin >> n >> cap;
-    for (int i = 0; i != 2 * n + 1; i++) {
-        vector<int> ele(2 * n + 1);
-        for (int j = 0; j != 2 * n + 1; j++) {
-            cin >> ele[j];
-            if (i != j) c_min = min(c_min, ele[j]);
+    cin >> n >> K;
+    for (ll i = 0; i <= 2*n; i++) {
+        for (ll j = 0; j <= 2*n; j++) {
+            cin >> C[i][j];
+            if (i != j) c_min = min(c_min, C[i][j]);
         }
-        C.push_back(ele);
-        V.push_back(i);
     }
-    cost = load = 0;
-    x.resize(2 * n + 1, 0);
-    mark.resize(2 * n + 1, false);
 }
 
-bool check(int v, int k) {
-    if (v == 0) return false;
-    if (mark[v]) return false;
-    if (v <= n && load >= cap) return false;
-    if (v > n && !mark[v - n]) return false;
-    if (best < cost + c_min * (2 * n + 1 - k)) return false;
+bool check(ll v, ll k) {
+    if (M[v]) return false;                                 //nếu đã thăm
+    if (v <= n && load >= K) return false;                 //nếu đi đón mà số lượng đã đầy rồi
+    if (v > n && !M[v - n]) return false;                   //nếu đi trả mà chưa đón
+    if (dis + c_min * (2*n - k + 1) >= best) return false;  //cắt nhánh
     return true;
 }
+void TRY(ll k) {
+    for (ll v = 1; v <= 2*n; v++) {
+        if (check(v, k)) {
+            //update
+            if (v <= n) load++;
+            else load--;
+            x[k] = v;
+            dis += C[x[k - 1]][v];
+            M[v] = 1;
 
-void update(int v, int k) {
-    if (v <= n) load++;
-    else load--;
-    x[k] = v;
-    cost += C[x[k - 1]][v];
-    mark[v] = true;
-}
+            if (k < 2*n) {
+                TRY(k + 1);
+            } else {
+                //solution
+                best = min(best, dis + C[x[2*n]][0]);
+            }
 
-void rollback(int v, int k) {
-    if (v <= n) load--;
-    else load++;
-
-    x[k] = 0;
-    cost -= C[x[k - 1]][v];
-    mark[v] = false;
-}
-
-void solution() {
-    best = min(cost + C[x[2 * n]][0], best);
-}
-
-void TRY(int k) {
-    for (int v : V) {
-        if (!check(v, k)) continue;
-        update(v, k);
-        if (k == 2 * n) solution();
-        else TRY(k + 1);    
-        rollback(v, k);
+            //rollback
+            M[v] = 0;
+            if (v <= n) load--;
+            else load++;
+            dis -= C[x[k - 1]][v];
+        }
     }
 }
 
@@ -97,4 +88,5 @@ int main() {
     input();
     TRY(1);
     cout << best << endl;
+    return 0;
 }

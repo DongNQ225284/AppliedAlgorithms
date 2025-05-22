@@ -23,4 +23,28 @@ Input:
 4 3
 Output:
 1
+
+Cấu trúc lưu trữ: 
+
 */
+
+#include <bits/stdc++.h>
+#define ll long long
+#define MAX 50
+#define INF 1e9
+using namespace std;
+
+ll H, W;
+ll n;
+ll h[MAX], w[MAX];
+
+void input() {
+    cin >> H >> W;
+    cin >> n;
+    for (ll i = 1; i <= n; i++) cin >> h[i] >> w[i];
+}
+
+
+int main() {
+
+}
